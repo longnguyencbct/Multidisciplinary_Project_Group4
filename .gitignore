@@ -2,3 +2,7 @@
 venv/
 
 Demo/server_address.txt
+
+.vscode/
+
+Demo_CE/server_address.txt
