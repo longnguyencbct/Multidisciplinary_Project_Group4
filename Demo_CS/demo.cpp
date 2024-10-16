@@ -111,12 +111,16 @@ vector<double> decode(const vector<bitset<32>>& packed_data, vector<double>& err
     double prev_value = 0;
     for (const auto& packed : packed_data) {
         bool negative = false;
+
         if (packed[0] == 1)
             negative = true;
+
         bitset<32> errorBit = packed >> 1;
         double error = errorBit.to_ulong();
+
         if (negative)
             error = -error;
+        
         errors.push_back(error);
         double original_value = prev_value + error;
         decoded_data.push_back(original_value/1000);
@@ -150,13 +154,11 @@ int main() {
     // Show first row of input after encode then decode
     // printMatrix(decoded);
 
-    cout << "\n=================================== Start input after encode then decode: " << endl;
     for (int i = 0; i < decoded.size(); i++) {
         if (data[i] != decoded[i] * 1000)
             cout << "i = " << i << ": " << data[i] << " " << decoded[i] * 1000 << endl;
         //cout << data[i] << " " << decoded[i] << endl;
     }
-    cout << "=================================== End input after encode then decode" << endl;
 
     return 0;
 }
