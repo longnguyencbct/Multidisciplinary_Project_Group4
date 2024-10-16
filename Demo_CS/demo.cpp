@@ -41,11 +41,12 @@ vector<bitset<32>> bitPack(const vector<double>& errors) {
             err = -err;
         }
         
-        bitset<32> errBit = bitset<32>(err);
-        errBit = errBit << 1;
+        // Make sure err is unsigned int by casting it to unsigned int
+        // Since err need to be int type in order to fit in bitset
+        bitset<32> errBit = bitset<32>(static_cast<unsigned int>err);
 
-        if (negative) 
-            errBit |= bitset<32>(1); // This last bit = 1 mean negative and 0 is positive
+        if (negative)
+            errBit |= bitset<32>(1); // Set MSB to 1 for negative numbers
         
         packed.push_back(bitset<32>(errBit));
     }
@@ -89,11 +90,15 @@ vector<bitset<32>> encodeBlock(const vector<double>& data, vector<double>&errors
     errors.push_back(data[0]);
     double prev_value = data[0];
     for (size_t i = 1; i < data.size(); i++) {
+        // TODO: FORECASTING predicted_value
+
+
         double predicted_value = prev_value;
         double error = data[i] - predicted_value;
         errors.push_back(error);
         prev_value = data[i];
     }
+
     //Show first row of input after encode (in decimal)
     //printMatrix(errors);
     vector<bitset<32>> packed_data = bitPack(errors);
