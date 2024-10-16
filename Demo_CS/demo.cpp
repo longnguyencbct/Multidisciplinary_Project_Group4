@@ -8,6 +8,7 @@
 
 using namespace std;
 
+/* For debugging */
 void print2DMatrix(const vector<vector<double>>& matrix) {
     for (const auto& row : matrix) {
         for (const auto& value : row) {
@@ -16,7 +17,6 @@ void print2DMatrix(const vector<vector<double>>& matrix) {
         cout << endl;
     }
 }
-
 void printMatrix(const vector<double>& matrix) {
     for (const auto& row : matrix) {
         cout << row << endl;
@@ -28,25 +28,36 @@ void printBit(const vector<bitset<32>>& packed_data) {
     }
 }
 
+
+/* Helper helper functions */
+// Function to pack errors into bitsets
 vector<bitset<32>> bitPack(const vector<double>& errors) {
     vector<bitset<32>> packed;
     for (double err : errors) {
         bool negative = false;
+        
         if (err < 0) {
             negative = true;
             err = -err;
         }
+        
         bitset<32> errBit = bitset<32>(err);
         errBit = errBit << 1;
+
         if (negative) 
-            errBit |= bitset<32>(1);
-        // This last bit = 1 mean negative and 0 is positive
+            errBit |= bitset<32>(1); // This last bit = 1 mean negative and 0 is positive
+        
         packed.push_back(bitset<32>(errBit));
     }
     return packed;
 }
 
+
+/* Helper functions */
+// Read CSV file and return a 2D matrix of double
 vector<vector<double>> readCSV(const string& filename) {
+    cout << "Reading file: " << filename << endl;
+
     vector<vector<double>> data;
     ifstream file(filename);
     string line;
@@ -63,9 +74,17 @@ vector<vector<double>> readCSV(const string& filename) {
         }
         data.push_back(row);
     }
+
+    file.close();
+
+    cout << "\nEnd reading file: " << filename << endl;
     return data;
 }
 
+// TODO: Function to forcasting
+
+
+// Function to perform delta encoding
 vector<bitset<32>> encodeBlock(const vector<double>& data, vector<double>&errors) {
     errors.push_back(data[0]);
     double prev_value = data[0];
@@ -81,6 +100,7 @@ vector<bitset<32>> encodeBlock(const vector<double>& data, vector<double>&errors
     return packed_data;
 }
 
+// Function to decode the packed data
 vector<double> decode(const vector<bitset<32>>& packed_data, vector<double>& errors) {
     vector<double> decoded_data;
     double prev_value = 0;
@@ -101,35 +121,37 @@ vector<double> decode(const vector<bitset<32>>& packed_data, vector<double>& err
 }
 
 
-
+/* Main */
 int main() {
     string filename = "air_quality_monitors.csv";
     vector<vector<double>> csv_data = readCSV(filename);
-    //Show input rounded to 3 decimal 
-    //print2DMatrix(csv_data);
+    // Show input rounded to 3 decimal
+    // print2DMatrix(csv_data);
 
     vector<double> data;
     for (const auto& row : csv_data) {
         data.push_back((int)(row[0]*1000));
     }
-    //Show first row of input and *1000 so no decimal
-    //printMatrix(data);
+    // Show first row of input and *1000 so no decimal
+    // printMatrix(data);
 
     vector<double> encodedError;
     vector<bitset<32>> encoded = encodeBlock(data, encodedError);
-    //Show first row of input after encode (in binary)
-    //printBit(encoded);
+    // Show first row of input after encode (in binary)
+    // printBit(encoded);
 
     vector<double> decodedErrors;
     vector<double> decoded = decode(encoded, decodedErrors);
-    //Show first row of input after encode then decode
-    //printMatrix(decoded);
+    // Show first row of input after encode then decode
+    // printMatrix(decoded);
 
+    cout << "\n=================================== Start input after encode then decode: " << endl;
     for (int i = 0; i < decoded.size(); i++) {
         if (data[i] != decoded[i] * 1000)
             cout << "i = " << i << ": " << data[i] << " " << decoded[i] * 1000 << endl;
         //cout << data[i] << " " << decoded[i] << endl;
     }
+    cout << "=================================== End input after encode then decode" << endl;
 
     return 0;
 }
