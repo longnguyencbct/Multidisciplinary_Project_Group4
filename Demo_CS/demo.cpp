@@ -31,9 +31,9 @@ void printBit(const vector<bitset<32>>& packed_data) {
 
 /* Helper helper functions */
 // Function to pack errors into bitsets
-vector<bitset<32>> bitPack(const vector<double>& errors) {
+vector<bitset<32>> bitPack(const vector<int>& errors) {
     vector<bitset<32>> packed;
-    for (double err : errors) {
+    for (int err : errors) {
         bool negative = false;
         
         if (err < 0) {
@@ -57,8 +57,6 @@ vector<bitset<32>> bitPack(const vector<double>& errors) {
 /* Helper functions */
 // Read CSV file and return a 2D matrix of double
 vector<vector<double>> readCSV(const string& filename) {
-    cout << "Reading file: " << filename << endl;
-
     vector<vector<double>> data;
     ifstream file(filename);
     string line;
@@ -77,8 +75,6 @@ vector<vector<double>> readCSV(const string& filename) {
     }
 
     file.close();
-
-    cout << "\nEnd reading file: " << filename << endl;
     return data;
 }
 
@@ -86,15 +82,15 @@ vector<vector<double>> readCSV(const string& filename) {
 
 
 // Function to perform delta encoding
-vector<bitset<32>> encodeBlock(const vector<double>& data, vector<double>&errors) {
+vector<bitset<32>> encodeBlock(const vector<int>& data, vector<int>&errors) {
     errors.push_back(data[0]);
-    double prev_value = data[0];
+    int prev_value = data[0];
     for (size_t i = 1; i < data.size(); i++) {
         // TODO: FORECASTING predicted_value
 
 
-        double predicted_value = prev_value;
-        double error = data[i] - predicted_value;
+        int predicted_value = prev_value;
+        int error = data[i] - predicted_value;
         errors.push_back(error);
         prev_value = data[i];
     }
@@ -120,7 +116,7 @@ vector<double> decode(const vector<bitset<32>>& packed_data, vector<double>& err
 
         if (negative)
             error = -error;
-        
+
         errors.push_back(error);
         double original_value = prev_value + error;
         decoded_data.push_back(original_value/1000);
@@ -137,14 +133,14 @@ int main() {
     // Show input rounded to 3 decimal
     // print2DMatrix(csv_data);
 
-    vector<double> data;
+    vector<int> data;
     for (const auto& row : csv_data) {
         data.push_back((int)(row[0]*1000));
     }
     // Show first row of input and *1000 so no decimal
     // printMatrix(data);
 
-    vector<double> encodedError;
+    vector<int> encodedError;
     vector<bitset<32>> encoded = encodeBlock(data, encodedError);
     // Show first row of input after encode (in binary)
     // printBit(encoded);
