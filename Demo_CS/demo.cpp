@@ -43,7 +43,7 @@ vector<bitset<32>> bitPack(const vector<int>& errors) {
         
         // Make sure err is unsigned int by casting it to unsigned int
         // Since err need to be int type in order to fit in bitset
-        bitset<32> errBit = bitset<32>(static_cast<unsigned int>err);
+        bitset<32> errBit = bitset<32>(static_cast<unsigned int>(err));
 
         if (negative)
             errBit |= bitset<32>(1); // Set MSB to 1 for negative numbers
