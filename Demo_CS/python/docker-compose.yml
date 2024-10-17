@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  sprintz-compression:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: python main.py
