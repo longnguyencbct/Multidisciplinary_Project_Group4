@@ -1,6 +1,11 @@
+# Built-in
 import numpy as np
 from typing import List
 from bitstring import BitArray
+
+# Helper function
+from helpers import read_csv
+
 
 def bit_pack(errors: List[float]) -> List[BitArray]:
     packed = []
@@ -36,8 +41,6 @@ def decode(packed_data: List[BitArray]) -> List[float]:
     return decoded_data
 
 def sprintz_compression(filename: str) -> None:
-    from helpers import read_csv
-
     csv_data = read_csv(filename)
 
     for i in range(len(csv_data[0])):  # Number of columns
