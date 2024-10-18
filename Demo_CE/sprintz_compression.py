@@ -5,4 +5,6 @@ class SprintZCompression(Function):
         pass
 
     def process(self, input, context):
-        return input  # For now, just pass the data unchanged
+        logger = context.get_logger()
+        logger.info(f"Received message: {input}")
+        return input  # Just pass through for now
