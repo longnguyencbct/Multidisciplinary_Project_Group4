@@ -7,7 +7,7 @@ client = pulsar.Client(pulsar_address)
 import csv
 import time
 # Producer for the Air Quality Monitors topic
-producer = client.create_producer('persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitors')
+producer = client.create_producer('persistent://Smart_Home/Air_Quality_Monitor/Raw_Air_Quality_Monitor')
 
 # Open the CSV file
 with open('air_quality_monitors.csv', 'r') as csvfile:
