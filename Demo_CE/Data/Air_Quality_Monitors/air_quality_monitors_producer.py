@@ -13,8 +13,12 @@ producer = client.create_producer('persistent://Smart_Home/Environmental_Monitor
 with open('air_quality_monitors.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        # Send each row as a message every minute
-        producer.send(str(row).encode('utf-8'))
-        time.sleep(1)
+        # Extract all values from the row and join them into a comma-separated string
+        row_values = ','.join(row.values())
+
+        # Send each row as a message
+        producer.send(row_values.encode('utf-8'))
+        
+        time.sleep(1)  # Wait for 1 second between messages
 
 client.close()
