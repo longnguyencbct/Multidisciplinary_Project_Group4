@@ -7,7 +7,7 @@ client = pulsar.Client(pulsar_address)
 import csv
 import time
 # Producer for the Air Quality Monitors topic
-producer = client.create_producer('persistent://Smart_Home/Air_Quality_Monitor/Raw_Air_Quality_Monitor')
+producer = client.create_producer('persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor')
 
 # Open the CSV file
 with open('air_quality_monitors.csv', 'r') as csvfile:
@@ -17,7 +17,7 @@ with open('air_quality_monitors.csv', 'r') as csvfile:
         row_values = ','.join(row.values())
         # Send each row as a message
         producer.send(row_values.encode('utf-8'))
-        print("Sent",row_values,"to Raw_Air_Quality_Monitor")
+        print("Sent",row_values,"to Air_Quality_Monitor")
         
         time.sleep(1)  # Wait for 1 second between messages
 
