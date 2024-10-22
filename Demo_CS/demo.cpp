@@ -216,7 +216,7 @@ int main() {
     }
     for (int i = 0; i < csv_data.size(); i++) {
         vector<double> row = csv_data[i];
-        //encode(row,prev_data);
+        encode(row,prev_data);
     }
 
     vector<double> prev_decode;
