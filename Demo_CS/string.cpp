@@ -11,14 +11,15 @@ using namespace std;
 void print2DMatrix(const vector<vector<double>>& matrix) {
     for (const auto& row : matrix) {
         for (const auto& value : row) {
-            cout << fixed << setprecision(0) << value << " ";
+            cout << fixed << setprecision(3) << value << " ";
         }
         cout << endl;
     }
 }
+
 void printMatrix(const vector<double>& matrix) {
     for (const auto& row : matrix) {
-        cout << fixed << setprecision(0) << row << ", ";
+        cout << fixed << setprecision(3) << row << ", ";
     }
     cout << endl;
 }
@@ -61,7 +62,6 @@ void bitPack1(const vector<double>& errors) {
     }
     return;
 }
-
 
 vector<vector<double>> readCSV(const string& filename, int& count) {
     vector<vector<double>> data;
@@ -124,22 +124,39 @@ vector<vector<double>> readCSV(const string& filename, int& count) {
         }
         data.push_back(row);
     }
-
-    file.close();
     return data;
 }
 
-void encode(const vector<double>& data, vector<double>& prev_data) {
+void encode(const string& line, vector<double>& prev_data) {
     vector<double> errors;
-    for (size_t i = 0; i < data.size(); i++) {
-        double cur = data[i];
-        if (i != 0)
-            cur *= 1000;
+    stringstream ss(line);
+    string timestamp, value;
+    vector<double> row;
+
+    getline(ss, timestamp, ',');
+    timestamp.erase(remove(timestamp.begin(), timestamp.end(), '-'), timestamp.end());
+    timestamp.erase(remove(timestamp.begin(), timestamp.end(), ':'), timestamp.end());
+    timestamp.erase(remove(timestamp.begin(), timestamp.end(), ' '), timestamp.end());
+    string modifiedTimestamp = timestamp.substr(3);
+    double timestampInt = (stod(modifiedTimestamp) / 100);
+    row.push_back(timestampInt);
+
+    while (getline(ss, value, ',')) {
+        double number = stod(value);
+        double rounded_number;
+        if (number * 1000.0 >= (int)(number * 1000.0) + 0.5) {
+            rounded_number = (int)(number * 1000.0 + 1);
+        }
+        else
+            rounded_number = (int)(number * 1000.0);
+        row.push_back(rounded_number);
+    }
+    for (int i = 0; i < prev_data.size(); i++) {
+        double cur = row[i];
         double error = cur - prev_data[i];
         errors.push_back(error);
         prev_data[i] = cur;
     }
-    //printMatrix(errors);
     bitPack1(errors);
     return ;
 }
@@ -202,26 +219,29 @@ void decode(vector<double>& prev_decode) {
     return ;
 }
 
-
 int main() {
     string filename = "air_quality_monitors.csv";
+    ifstream file(filename);
+    string line;
+    getline(file, line);
+    stringstream ss(line);
+    string headline;
     int count = 0;
-    vector<vector<double>> csv_data = readCSV(filename,count);
-    //Show input rounded to 3 decimal 
-    //print2DMatrix(csv_data);
-
+    while (getline(ss, headline, ',')) {
+        count++;
+    }
 
     vector<double> prev_data;
-    for (int i = 0; i < count + 1; i++) {
+    for (int i = 0; i < count; i++) {
         prev_data.push_back(0.0);
     }
-    for (int i = 0; i < csv_data.size(); i++) {
-        vector<double> row = csv_data[i];
-        encode(row,prev_data);
+    while (getline(file, line)) {
+        encode(line, prev_data);
     }
 
+
     vector<double> prev_decode;
-    for (int i = 0; i < count + 1; i++) {
+    for (int i = 0; i < count; i++) {
         prev_decode.push_back(0.0);
     }
     decode(prev_decode);
