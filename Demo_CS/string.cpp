@@ -34,7 +34,13 @@ vector<string> encode_string(const string& line) {
 
     // Extract timestamp and convert to numeric format
     getline(ss, timestamp, ',');
-    string modifiedTimestamp = timestamp.substr(3);
+    string newTimestamp;
+for (char c : timestamp) {
+    if (c != '-' && c != ':' && c != ' ') {
+        newTimestamp += c;
+    }
+}
+string modifiedTimestamp = newTimestamp.substr(3);
     double timestampInt = (stod(modifiedTimestamp) / 100);
     row.push_back(timestampInt);
 
