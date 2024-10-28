@@ -75,9 +75,11 @@ vector<vector<double>> readCSV(const string& filename, int& count) {
         vector<double> row;
 
         getline(ss, timestamp, ',');
-        timestamp.erase(remove(timestamp.begin(), timestamp.end(), '-'), timestamp.end());
-        timestamp.erase(remove(timestamp.begin(), timestamp.end(), ':'), timestamp.end());
-        timestamp.erase(remove(timestamp.begin(), timestamp.end(), ' '), timestamp.end());
+        // // Correct usage for removing characters from a string
+        // timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), '-'), timestamp.end());
+        // timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), ':'), timestamp.end());
+        // timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), ' '), timestamp.end());
+
         string modifiedTimestamp = timestamp.substr(3);
         double timestampInt = (stod(modifiedTimestamp) / 100);
         row.push_back(timestampInt);
@@ -104,9 +106,10 @@ vector<vector<double>> readCSV(const string& filename, int& count) {
 
 
         getline(ss, timestamp, ',');
-        timestamp.erase(remove(timestamp.begin(), timestamp.end(), '-'), timestamp.end());
-        timestamp.erase(remove(timestamp.begin(), timestamp.end(), ':'), timestamp.end());
-        timestamp.erase(remove(timestamp.begin(), timestamp.end(), ' '), timestamp.end());
+        // Example code to modify `timestamp` by removing certain characters:
+        // timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), '-'), timestamp.end());
+        // timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), ':'), timestamp.end());
+        // timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), ' '), timestamp.end());
         string modifiedTimestamp = timestamp.substr(3);
         double timestampInt = (stod(modifiedTimestamp) / 100);
         row.push_back(timestampInt);
@@ -203,28 +206,28 @@ void decode(vector<double>& prev_decode) {
 }
 
 
-int main() {
-    string filename = "air_quality_monitors.csv";
-    int count = 0;
-    vector<vector<double>> csv_data = readCSV(filename,count);
-    //Show input rounded to 3 decimal 
-    //print2DMatrix(csv_data);
+// int main() {
+//     string filename = "air_quality_monitors.csv";
+//     int count = 0;
+//     vector<vector<double>> csv_data = readCSV(filename,count);
+//     //Show input rounded to 3 decimal 
+//     //print2DMatrix(csv_data);
 
 
-    vector<double> prev_data;
-    for (int i = 0; i < count + 1; i++) {
-        prev_data.push_back(0.0);
-    }
-    for (int i = 0; i < csv_data.size(); i++) {
-        vector<double> row = csv_data[i];
-        encode(row,prev_data);
-    }
+//     vector<double> prev_data;
+//     for (int i = 0; i < count + 1; i++) {
+//         prev_data.push_back(0.0);
+//     }
+//     for (int i = 0; i < csv_data.size(); i++) {
+//         vector<double> row = csv_data[i];
+//         encode(row,prev_data);
+//     }
 
-    vector<double> prev_decode;
-    for (int i = 0; i < count + 1; i++) {
-        prev_decode.push_back(0.0);
-    }
-    decode(prev_decode);
+//     vector<double> prev_decode;
+//     for (int i = 0; i < count + 1; i++) {
+//         prev_decode.push_back(0.0);
+//     }
+//     decode(prev_decode);
 
-    return 0;
-}
+//     return 0;
+// }
