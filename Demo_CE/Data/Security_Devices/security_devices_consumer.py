@@ -3,7 +3,7 @@ with open('../../server_address.txt', 'r') as file:
 
 import pulsar
 client = pulsar.Client(pulsar_address)
-consumer = client.subscribe('persistent://Smart_Home/Security_Surveillance/Security_Devices', subscription_name='security-devices-sub')
+consumer = client.subscribe('persistent://Smart_Home/Security_Surveilance/Security_Devices', subscription_name='security-devices-sub')
 
 # Receive messages
 while True:
