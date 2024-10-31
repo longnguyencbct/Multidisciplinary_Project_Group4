@@ -4,6 +4,7 @@ from pathlib import Path
 import pulsar
 import csv
 import time
+import struct
 
 # Define the relative path to the .so file based on the script's location
 base_path = Path(__file__).resolve().parents[3]  # Adjust based on folder structure
@@ -20,20 +21,26 @@ with open('../../server_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()
 
 client = pulsar.Client(pulsar_address)
-# producer = client.create_producer('persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor')
+producer = client.create_producer('persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor')
 
 # Encode and send data
 with open('air_quality_monitors.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         row_values = ','.join(row.values())
+        # Encode the row using the Sprintz encoder to get a single binary string
         encoded_data = sprintz_encoder.encode_string(row_values)
-        # producer.send(row_values.encode('utf-8'))  # Change if needed for encoded data
-        print("Encoded row values:", encoded_data)
-        print("Encoded row type:", type(encoded_data))
-        print("Component type:",type(encoded_data[0]))
-        print()
 
+        # Convert the concatenated binary string to bytes
+        binary_encoded_data = int(encoded_data, 2).to_bytes((len(encoded_data) + 7) // 8, byteorder='big')
+        
+        producer.send(binary_encoded_data)  # Send the encoded binary data
+        
+        print("Encoded row values (binary):", binary_encoded_data)
+        print("Encoded row type:", type(binary_encoded_data))
+        print("Length of encoded data in bytes:", len(binary_encoded_data))
+        print()
+        
         time.sleep(1)
 
 client.close()

@@ -26,7 +26,7 @@ void init_prev_data(int count) {
 }
 
 // Function to encode a single line
-vector<string> encode_string(const string& line) {
+string encode_string(const string& line) {
     vector<double> errors;
     stringstream ss(line);
     string timestamp, value;
@@ -35,12 +35,12 @@ vector<string> encode_string(const string& line) {
     // Extract timestamp and convert to numeric format
     getline(ss, timestamp, ',');
     string newTimestamp;
-for (char c : timestamp) {
-    if (c != '-' && c != ':' && c != ' ') {
-        newTimestamp += c;
+    for (char c : timestamp) {
+        if (c != '-' && c != ':' && c != ' ') {
+            newTimestamp += c;
+        }
     }
-}
-string modifiedTimestamp = newTimestamp.substr(3);
+    string modifiedTimestamp = newTimestamp.substr(3);
     double timestampInt = (stod(modifiedTimestamp) / 100);
     row.push_back(timestampInt);
 
@@ -69,8 +69,8 @@ string modifiedTimestamp = newTimestamp.substr(3);
         prev_data[i] = cur;
     }
 
-    // Perform bit packing and convert to binary strings
-    vector<string> encoded_errors;
+    // Perform bit packing and concatenate to a single binary string
+    string concatenated_binary;
     for (double err : errors) {
         bool negative = false;
         if (err < 0) {
@@ -84,17 +84,17 @@ string modifiedTimestamp = newTimestamp.substr(3);
         if (negative)
             errBit.set(0);  // Set the last bit if the value is negative
 
-        // Convert the bitset to a binary string and add it to the result
-        encoded_errors.push_back(errBit.to_string());
+        // Append the binary string to the result
+        concatenated_binary += errBit.to_string();
     }
-    return encoded_errors;
+    return concatenated_binary;
 }
-
 
 // Binding code
 PYBIND11_MODULE(sprintz_encoder, m) {
-    m.def("encode_string", &encode_string, "Encode a single line using Sprintz encoding");
+    m.def("encode_string", &encode_string, "Encode a single line using Sprintz encoding, returning one concatenated binary string");
 }
+
 
 // using namespace std;
 // void print2DMatrix_string(const vector<vector<double>>& matrix) {
