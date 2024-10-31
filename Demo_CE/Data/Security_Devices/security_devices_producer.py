@@ -8,7 +8,7 @@ import csv
 import time
 
 # Producer for the Security Devices topic
-producer = client.create_producer('persistent://Smart_Home/Security_Surveillance/Security_Devices')
+producer = client.create_producer('persistent://Smart_Home/Security_Surveilance/Security_Devices')
 
 # Open the CSV file
 with open('security_devices.csv', 'r') as csvfile:
