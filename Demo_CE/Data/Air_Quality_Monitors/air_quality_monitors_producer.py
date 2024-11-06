@@ -29,10 +29,10 @@ with open('air_quality_monitors.csv', 'r') as csvfile:
     for row in reader:
         row_values = ','.join(row.values())
         # Encode the row using the Sprintz encoder to get a single binary string
-        encoded_data = sprintz_encoder.encode_string(row_values)
+        encoded_data = sprintz_encoder.encode_string(row_values) #"0010010101"
 
         # Convert the concatenated binary string to bytes
-        binary_encoded_data = int(encoded_data, 2).to_bytes((len(encoded_data) + 7) // 8, byteorder='big')
+        binary_encoded_data = int(encoded_data, 2).to_bytes((len(encoded_data) + 7) // 8, byteorder='big') #0010010101 0x
         
         producer.send(binary_encoded_data)  # Send the encoded binary data
         
