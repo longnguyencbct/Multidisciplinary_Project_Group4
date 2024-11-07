@@ -1,0 +1,3 @@
+Access broker terminal:
+sudo docker exec -it broker /bin/bash 
+
