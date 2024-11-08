@@ -6,3 +6,6 @@ sudo docker exec -it broker /bin/bash
 
 [DEBUG] Check Delete Inactive Topics
 grep "brokerDeleteInactiveTopicsEnabled" conf/broker.conf
+
+[DEBUG] Check Cluster Name
+grep "clusterName" conf/broker.conf.
