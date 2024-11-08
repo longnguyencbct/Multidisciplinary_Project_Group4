@@ -84,6 +84,7 @@ services:
       - advertisedAddress=broker
       - advertisedListeners=external:pulsar://127.0.0.1:6650
       - PULSAR_MEM=-Xms512m -Xmx512m -XX:MaxDirectMemorySize=256m
+      - brokerDeleteInactiveTopicsEnabled=false
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -96,8 +97,5 @@ services:
       - ./data/bookkeeper:/pulsar/data/bookkeeper
       - ./setup_pulsar.sh:/pulsar/setup_pulsar.sh  # Mount the setup script
       - ./list_pulsar_entities.sh:/pulsar/list_pulsar_entities.sh  # Mount the listing script
-    command: >
-      bash -c "bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker & \
-               sleep 20 && \
-               bash /pulsar/setup_pulsar.sh && \
-               bash /pulsar/list_pulsar_entities.sh"
+      - ./broker_entrypoint.sh:/pulsar/broker_entrypoint.sh       # Mount the broker_entrypoint script
+    entrypoint: ["/pulsar/broker_entrypoint.sh"]

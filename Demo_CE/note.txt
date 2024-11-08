@@ -1,7 +1,8 @@
 Docker Recompose
-sudo docker compose down
-sudo docker compose up -d
+./pulsar_exec.sh
 
 Access broker terminal:
 sudo docker exec -it broker /bin/bash 
 
+[DEBUG] Check Delete Inactive Topics
+grep "brokerDeleteInactiveTopicsEnabled" conf/broker.conf
