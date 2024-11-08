@@ -13,7 +13,7 @@ sed -i "s/^clusterName=.*/clusterName=cluster-a/" $config_file
 sed -i "s/^managedLedgerDefaultEnsembleSize=.*/managedLedgerDefaultEnsembleSize=1/" $config_file
 sed -i "s/^managedLedgerDefaultWriteQuorum=.*/managedLedgerDefaultWriteQuorum=1/" $config_file
 sed -i "s/^managedLedgerDefaultAckQuorum=.*/managedLedgerDefaultAckQuorum=1/" $config_file
-sed -i "s/^advertisedAddress=.*/advertisedAddress=broker/" $config_file
+sed -i "s/^advertisedAddress=.*/advertisedAddress=localhost/" $config_file
 sed -i "s/^advertisedListeners=.*/advertisedListeners=external:pulsar:\/\/127.0.0.1:6650/" $config_file
 sed -i "s/^brokerDeleteInactiveTopicsEnabled=.*/brokerDeleteInactiveTopicsEnabled=false/" $config_file
 

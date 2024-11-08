@@ -2,4 +2,4 @@
 bookieHost: "bookie:3181"
 journalDir: "data/bookkeeper/journal"
 ledgerDirs: "1\tdata/bookkeeper/ledgers"
-instanceId: "bcfee9ee-c9c5-45ce-833c-f33f22b2ea0b"
+instanceId: "32f17b34-0c04-4a0a-81bd-67e5d7fde402"

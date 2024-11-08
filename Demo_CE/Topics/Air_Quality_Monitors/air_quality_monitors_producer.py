@@ -17,7 +17,7 @@ sys.modules["sprintz_encoder"] = sprintz_encoder
 spec.loader.exec_module(sprintz_encoder)
 
 # Pulsar setup
-with open('../../server_address.txt', 'r') as file:
+with open('../../local_server_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()
 
 client = pulsar.Client(pulsar_address)
