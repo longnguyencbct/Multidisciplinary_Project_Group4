@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+# Apply environment variables to broker.conf
+sed -i "s/^brokerDeleteInactiveTopicsEnabled=.*/brokerDeleteInactiveTopicsEnabled=false/" conf/broker.conf
+
+# Start the broker in the foreground
+echo "Starting Pulsar broker..."
+bin/pulsar broker &
+
+# Wait for the broker to become available on port 8080
+echo "Waiting for broker to be fully initialized..."
+RETRY_COUNT=0
+MAX_RETRIES=20
+until curl -s http://localhost:8080/admin/v2/tenants || [ "$RETRY_COUNT" -eq "$MAX_RETRIES" ]; do
+    echo "Broker not available yet. Retrying in 5 seconds..."
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    sleep 5
+done
+
+if [ "$RETRY_COUNT" -eq "$MAX_RETRIES" ]; then
+    echo "Failed to connect to broker after multiple attempts. Exiting."
+    exit 1
+fi
+
+# Run the setup script if broker is available
+echo "Running setup script..."
+bash /pulsar/setup_pulsar.sh
+
+# Run list entities script after setup
+bash /pulsar/list_pulsar_entities.sh
+
+# Keep the broker running in the foreground
+wait
