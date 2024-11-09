@@ -15,6 +15,7 @@ sudo mkdir -p ./data/zookeeper ./data/bookkeeper
 # Set the correct permissions (optional but recommended if you face permission issues)
 echo "Setting permissions for data directories..."
 sudo chown -R $(whoami):$(whoami) ./data
+sudo chmod -R 777 ./data
 
 # Start Docker Compose
 echo "Starting Docker Compose..."
