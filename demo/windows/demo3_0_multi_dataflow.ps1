@@ -17,10 +17,10 @@ foreach ($topic in $topics.Keys) {
     $topic_dir = Join-Path $BASE_DIR $topic
 
     # Open a new PowerShell window for the producer
-    Start-Process powershell -ArgumentList "cd `"$topic_dir`"; python ${script_prefix}_producer.py"
+    Start-Process powershell -ArgumentList "-NoExit", "cd `"$topic_dir`"; python ${script_prefix}_producer.py"
 
     # Open a new PowerShell window for the consumer
-    Start-Process powershell -ArgumentList "cd `"$topic_dir`"; python ${script_prefix}_consumer.py"
+    Start-Process powershell -ArgumentList "-NoExit", "cd `"$topic_dir`"; python ${script_prefix}_consumer.py"
 
     # Optional: Sleep interval between each pair of producer/consumer launches
     Start-Sleep -Seconds 1
