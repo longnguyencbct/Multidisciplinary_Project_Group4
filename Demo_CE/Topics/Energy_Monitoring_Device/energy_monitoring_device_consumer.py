@@ -1,4 +1,4 @@
-with open('../../server_address.txt', 'r') as file:
+with open('../pulsar_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()  # Read the first line and strip any extra whitespace
 
 import pulsar
