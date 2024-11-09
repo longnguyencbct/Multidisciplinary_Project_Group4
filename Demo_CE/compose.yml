@@ -35,7 +35,6 @@ services:
       - pulsar
     command: >
       bin/pulsar initialize-cluster-metadata --cluster cluster-a --zookeeper zookeeper:2181 --configuration-store zookeeper:2181 --web-service-url http://broker:8080 --broker-service-url pulsar://broker:6650
-
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -65,7 +64,9 @@ services:
 
   # Start broker
   broker:
-    image: apachepulsar/pulsar:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: broker
     hostname: broker
     restart: on-failure
@@ -92,7 +93,12 @@ services:
       - "8080:8080"
     volumes:
       - ./data/bookkeeper:/pulsar/data/bookkeeper
-      - ./setup_pulsar.sh:/pulsar/setup_pulsar.sh  # Mount the setup script
-      - ./list_pulsar_entities.sh:/pulsar/list_pulsar_entities.sh  # Mount the listing script
-      - ./broker_entrypoint.sh:/pulsar/broker_entrypoint.sh       # Mount the broker_entrypoint script
-    entrypoint: ["/pulsar/broker_entrypoint.sh"]
+    command: >
+      bash -c "bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker &&
+      echo 'Waiting for broker to be fully initialized...';
+      until curl -s http://localhost:8080/admin/v2/tenants; do
+        sleep 5;
+      done;
+      echo 'Broker is ready. Running setup script...' &&
+      ./setup_pulsar.sh"
+
