@@ -46,3 +46,6 @@ else
 fi
 
 echo "Setup complete. Docker containers are now running."
+
+cd ../Demo_CS
+python setup.py build_ext --inplace
