@@ -21,7 +21,7 @@ with open('../pulsar_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()
 
 client = pulsar.Client(pulsar_address)
-producer = client.create_producer('persistent://Smart_Home/Security_Surveilance/Surveillance_Cameras')
+producer = client.create_producer('persistent://Smart_Home/Security_Surveillance/Surveillance_Camera')
 
 # Encode and send data
 with open('surveillance_cameras.csv', 'r') as csvfile:

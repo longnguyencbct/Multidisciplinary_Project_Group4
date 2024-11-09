@@ -21,10 +21,10 @@ with open('../pulsar_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()
 
 client = pulsar.Client(pulsar_address)
-producer = client.create_producer('persistent://Smart_Home/Environmental_Monitoring/Indoor_Climate_Monitoring_Devices')
+producer = client.create_producer('persistent://Smart_Home/Security_Surveillance/Security_Device')
 
 # Encode and send data
-with open('indoor_climate_monitoring_devices.csv', 'r') as csvfile:
+with open('security_devices.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         row_values = ','.join(row.values())
@@ -43,5 +43,4 @@ with open('indoor_climate_monitoring_devices.csv', 'r') as csvfile:
         print()
         
         time.sleep(1) 
-
 client.close()
