@@ -79,8 +79,8 @@ services:
       - managedLedgerDefaultEnsembleSize=1
       - managedLedgerDefaultWriteQuorum=1
       - managedLedgerDefaultAckQuorum=1
-      - advertisedAddress=localhost
-      - advertisedListeners=external:pulsar://127.0.0.1:6650
+      - advertisedAddress=<YOUR_SERVER_IP>  # Replace with your server’s public or private IP address
+      - advertisedListeners=external:pulsar://<YOUR_SERVER_IP>:6650
       - PULSAR_MEM=-Xms512m -Xmx512m -XX:MaxDirectMemorySize=256m
       - brokerDeleteInactiveTopicsEnabled=false
     depends_on:
@@ -89,8 +89,8 @@ services:
       bookie:
         condition: service_started
     ports:
-      - "6650:6650"
-      - "8080:8080"
+      - "6650:6650"  # Broker port for client connections
+      - "8080:8080"  # Admin port
     volumes:
       - ./data/bookkeeper:/pulsar/data/bookkeeper
     command: >
@@ -101,4 +101,3 @@ services:
       done;
       echo 'Broker is ready. Running setup script...' &&
       ./setup_pulsar.sh"
-
