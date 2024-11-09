@@ -47,5 +47,7 @@ fi
 
 echo "Setup complete. Docker containers are now running."
 
+sudo docker exec -it broker bash -c "./setup_pulsar.sh"
+
 cd ../Demo_CS
 python setup.py build_ext --inplace
