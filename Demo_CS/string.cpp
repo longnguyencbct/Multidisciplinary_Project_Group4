@@ -75,14 +75,13 @@ string encode_string(const string& line) {
         bool negative = false;
         if (err < 0) {
             negative = true;
-            err = -err;
+            err = (-err)*2 - 1;
+        } else {
+            err *= 2;
         }
 
         // Pack the error into a bitset
         bitset<32> errBit(static_cast<uint32_t>(err));
-        errBit = errBit << 1;  // Shift left by 1
-        if (negative)
-            errBit.set(0);  // Set the last bit if the value is negative
 
         // Append the binary string to the result
         concatenated_binary += errBit.to_string();
