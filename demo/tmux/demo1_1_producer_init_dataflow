@@ -1,0 +1,11 @@
+#!/bin/bash
+cd ../../Demo_CE/Topics/Air_Quality_Monitor
+
+# Start a new tmux session
+tmux new-session -d -s demo_session
+
+# Run the producer in a new tmux window
+tmux new-window -t demo_session:1 -n 'Producer' "python3 air_quality_monitor_producer.py"
+
+# Attach to the tmux session
+tmux attach-session -t demo_session

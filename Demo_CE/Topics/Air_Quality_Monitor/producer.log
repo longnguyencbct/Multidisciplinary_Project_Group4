@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/app/Demo_CE/Topics/Air_Quality_Monitor/air_quality_monitor_producer.py", line 15, in <module>
+    sprintz_encoder = importlib.util.module_from_spec(spec)
+  File "<frozen importlib._bootstrap>", line 565, in module_from_spec
+  File "<frozen importlib._bootstrap_external>", line 1173, in create_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+ImportError: /lib/x86_64-linux-gnu/libstdc++.so.6: version `GLIBCXX_3.4.32' not found (required by /app/Demo_CS/sprintz_encoder.cpython-312-x86_64-linux-gnu.so)

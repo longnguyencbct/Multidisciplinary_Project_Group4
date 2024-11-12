@@ -1,0 +1,7 @@
+2024-11-12 03:55:01.636 INFO  [123379967028096] Client:86 | Subscribing on Topic :persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor
+2024-11-12 03:55:01.636 INFO  [123379967028096] ClientConnection:187 | [<none> -> pulsar://138.2.98.232:6650] Create ClientConnection, timeout=10000
+2024-11-12 03:55:01.636 INFO  [123379967028096] ConnectionPool:124 | Created connection for pulsar://138.2.98.232:6650-pulsar://138.2.98.232:6650-0
+2024-11-12 03:55:01.680 INFO  [123379944261312] ClientConnection:403 | [172.18.0.2:54666 -> 138.2.98.232:6650] Connected to broker
+2024-11-12 03:55:01.771 INFO  [123379944261312] HandlerBase:111 | [persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor, air-quality-sub, 0] Getting connection from pool
+2024-11-12 03:55:01.813 INFO  [123379944261312] BinaryProtoLookupService:85 | Lookup response for persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor, lookup-broker-url pulsar://138.2.98.232:6650, from [172.18.0.2:54666 -> 138.2.98.232:6650] 
+2024-11-12 03:55:01.858 INFO  [123379944261312] ConsumerImpl:300 | [persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor, air-quality-sub, 0] Created consumer on broker [172.18.0.2:54666 -> 138.2.98.232:6650] 

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  producer_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: producer_consumer_container
+    volumes:
+      - ./Demo_CE:/app/Demo_CE
+      - ./Demo_CS:/app/Demo_CS
+      - ./demo/tmux:/app/demo/tmux
+    command: ["tail", "-f", "/dev/null"]

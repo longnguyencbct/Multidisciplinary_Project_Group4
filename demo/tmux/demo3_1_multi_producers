@@ -1,0 +1,31 @@
+#!/bin/bash
+# Define the base directory for topics
+BASE_DIR="../../Demo_CE/Topics"
+
+# Declare an array of topics and script names
+declare -A topics=(
+    ["Air_Quality_Monitor"]="air_quality_monitor"
+    ["Appliance_Control_Device"]="appliance_control_device"
+    ["Energy_Monitoring_Device"]="energy_monitoring_device"
+    ["Indoor_Climate_Monitoring_Device"]="indoor_climate_monitoring_device"
+    ["Security_Device"]="security_device"
+    ["Surveillance_Camera"]="surveillance_camera"
+)
+
+# Start a new tmux session
+tmux new-session -d -s demo_session
+
+# Loop over topics to run each producer in separate tmux windows
+for topic in "${!topics[@]}"; do
+    # Get the script prefix from the topic array
+    script_prefix="${topics[$topic]}"
+    
+    # Run the producer in a new tmux window
+    tmux new-window -t demo_session -n "${topic}_Producer" "cd $BASE_DIR/$topic; python3 ${script_prefix}_producer.py"
+    
+    # Optional: Add a sleep interval between each pair of producer launches
+    sleep 1
+done
+
+# Attach to the tmux session
+tmux attach-session -t demo_session
