@@ -156,6 +156,7 @@ string decode_string(const string& line) {
 // Binding code
 PYBIND11_MODULE(sprintz_encoder, m) {
     m.def("encode_string", &encode_string, "Encode a single line using Sprintz encoding, returning one concatenated binary string");
+    m.def("decode_string", &decode_string, "Decode a single binary string using Sprintz decoding, returning the original data");
 }
 
 

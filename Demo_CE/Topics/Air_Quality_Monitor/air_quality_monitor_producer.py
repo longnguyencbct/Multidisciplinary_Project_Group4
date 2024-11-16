@@ -4,7 +4,6 @@ from pathlib import Path
 import pulsar
 import csv
 import time
-import struct
 
 # Define the relative path to the .so file based on the script's location
 sprintz_path = Path(__file__).resolve().parents[1] / "shared" / "sprintz_encoder.cpython-312-x86_64-linux-gnu.so"
@@ -27,6 +26,7 @@ with open('air_quality_monitors.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         row_values = ','.join(row.values())
+        
         # Encode the row using the Sprintz encoder to get a single binary string
         encoded_data = sprintz_encoder.encode_string(row_values)
 
@@ -35,9 +35,8 @@ with open('air_quality_monitors.csv', 'r') as csvfile:
         
         producer.send(binary_encoded_data)  # Send the encoded binary data
         
-        print("Encoded row values (binary):", binary_encoded_data)
-        print("Encoded row type:", type(binary_encoded_data))
-        print("Length of encoded data in bytes:", len(binary_encoded_data))
+        print("Raw row values:\n", row_values)
+        print("Encoded row values (binary):\n", binary_encoded_data)
         print()
         
         time.sleep(1)
