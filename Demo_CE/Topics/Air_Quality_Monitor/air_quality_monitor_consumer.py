@@ -28,6 +28,9 @@ while True:
         # Convert the binary data to a binary string
         encoded_data = bin(int.from_bytes(binary_encoded_data, byteorder='big'))[2:]
         
+        # Ensure the binary string is padded to a multiple of 8 bits
+        encoded_data = encoded_data.zfill(len(binary_encoded_data) * 8)
+        
         # Debug prints to verify conversion
         print("Received binary encoded data:\n", binary_encoded_data)
         print("Converted to binary string:\n", encoded_data)
