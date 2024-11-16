@@ -34,12 +34,7 @@ services:
     networks:
       - pulsar
     command: >
-      bin/pulsar initialize-cluster-metadata \
-            --cluster cluster-a \
-            --zookeeper zookeeper:2181 \
-            --configuration-store zookeeper:2181 \
-            --web-service-url http://broker:8080 \
-            --broker-service-url pulsar://broker:6650
+      bin/pulsar initialize-cluster-metadata --cluster cluster-a --zookeeper zookeeper:2181 --configuration-store zookeeper:2181 --web-service-url http://broker:8080 --broker-service-url pulsar://broker:6650
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -69,7 +64,9 @@ services:
 
   # Start broker
   broker:
-    image: apachepulsar/pulsar:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: broker
     hostname: broker
     restart: on-failure
@@ -82,8 +79,8 @@ services:
       - managedLedgerDefaultEnsembleSize=1
       - managedLedgerDefaultWriteQuorum=1
       - managedLedgerDefaultAckQuorum=1
-      - advertisedAddress=localhost
-      - advertisedListeners=external:pulsar://127.0.0.1:6650
+      - advertisedAddress=<YOUR_SERVER_IP>  # Replace with your server’s public or private IP address
+      - advertisedListeners=external:pulsar://<YOUR_SERVER_IP>:6650
       - PULSAR_MEM=-Xms512m -Xmx512m -XX:MaxDirectMemorySize=256m
       - brokerDeleteInactiveTopicsEnabled=false
     depends_on:
@@ -92,11 +89,15 @@ services:
       bookie:
         condition: service_started
     ports:
-      - "6650:6650"
-      - "8080:8080"
+      - "6650:6650"  # Broker port for client connections
+      - "8080:8080"  # Admin port
     volumes:
       - ./data/bookkeeper:/pulsar/data/bookkeeper
-      - ./setup_pulsar.sh:/pulsar/setup_pulsar.sh  # Mount the setup script
-      - ./list_pulsar_entities.sh:/pulsar/list_pulsar_entities.sh  # Mount the listing script
-      - ./broker_entrypoint.sh:/pulsar/broker_entrypoint.sh       # Mount the broker_entrypoint script
-    entrypoint: ["/pulsar/broker_entrypoint.sh"]
+    command: >
+      bash -c "bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker &&
+      echo 'Waiting for broker to be fully initialized...';
+      until curl -s http://localhost:8080/admin/v2/tenants; do
+        sleep 5;
+      done;
+      echo 'Broker is ready. Running setup script...' &&
+      ./setup_pulsar.sh"

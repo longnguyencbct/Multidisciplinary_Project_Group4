@@ -15,6 +15,7 @@ sudo mkdir -p ./data/zookeeper ./data/bookkeeper
 # Set the correct permissions (optional but recommended if you face permission issues)
 echo "Setting permissions for data directories..."
 sudo chown -R $(whoami):$(whoami) ./data
+sudo chmod -R 777 ./data
 
 # Start Docker Compose
 echo "Starting Docker Compose..."
@@ -45,3 +46,8 @@ else
 fi
 
 echo "Setup complete. Docker containers are now running."
+
+sudo docker exec -it broker bash -c "./setup_pulsar.sh"
+
+cd ../Demo_CS
+python setup.py build_ext --inplace
