@@ -7,8 +7,7 @@ import time
 import struct
 
 # Define the relative path to the .so file based on the script's location
-base_path = Path(__file__).resolve().parents[3]  # Adjust based on folder structure
-sprintz_path = base_path / "Demo_CS/sprintz_encoder.cpython-312-x86_64-linux-gnu.so"
+sprintz_path = Path(__file__).resolve().parents[1] / "shared" / "sprintz_encoder.cpython-312-x86_64-linux-gnu.so"
 
 # Load the .so file dynamically
 spec = importlib.util.spec_from_file_location("sprintz_encoder", sprintz_path)

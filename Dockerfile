@@ -1,38 +1,23 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12-slim
+# Use the official Python image as a base
+FROM python:3.8-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r Demo_CE/requirements.txt
-
-# Install setuptools
-RUN pip install --no-cache-dir setuptools
-
-# Install additional dependencies
+# Install necessary dependencies
 RUN apt-get update && apt-get install -y \
-    g++ \
-    make \
-    tmux \
-    software-properties-common \
-    && echo "deb http://deb.debian.org/debian testing main" >> /etc/apt/sources.list \
-    && apt-get update && apt-get install -y \
+    build-essential \
     libstdc++6 \
-    && sed -i '/testing/d' /etc/apt/sources.list \
     && rm -rf /var/lib/apt/lists/*
 
-# Compile the SprintZ algorithm
-RUN cd Demo_CS && python setup.py build_ext --inplace
+# Copy the requirements file into the container
+COPY Demo_CE/requirements.txt .
 
-# Expose any ports the app runs on
-EXPOSE 6650 8080
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Define environment variable
-ENV NAME World
+# Copy the setup.py and string.cpp files into the container
+COPY Demo_CS/setup.py Demo_CS/string.cpp /app/
 
-# Default command to keep the container running
-CMD ["tail", "-f", "/dev/null"]
+# Set the entrypoint to run the Python script
+ENTRYPOINT ["python"]

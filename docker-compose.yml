@@ -1,13 +1,182 @@
-version: '3.8'
-
 services:
-  producer_consumer:
+  init-setup:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: producer_consumer_container
+    container_name: init-setup
     volumes:
-      - ./Demo_CE:/app/Demo_CE
-      - ./Demo_CS:/app/Demo_CS
-      - ./demo/tmux:/app/demo/tmux
-    command: ["tail", "-f", "/dev/null"]
+      - ./shared:/shared
+      - ./Demo_CS:/app
+    working_dir: /app
+    command: ["/bin/sh", "/app/compile_and_copy.sh"]
+
+  air_quality_monitor_producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: air_quality_monitor_producer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Air_Quality_Monitor:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python air_quality_monitor_producer.py"]
+    tty: true
+
+  air_quality_monitor_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: air_quality_monitor_consumer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Air_Quality_Monitor:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python air_quality_monitor_consumer.py"]
+    tty: true
+
+  appliance_control_device_producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: appliance_control_device_producer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Appliance_Control_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python appliance_control_device_producer.py"]
+    tty: true
+
+  appliance_control_device_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: appliance_control_device_consumer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Appliance_Control_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python appliance_control_device_consumer.py"]
+    tty: true
+
+  energy_monitoring_device_producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: energy_monitoring_device_producer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Energy_Monitoring_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python energy_monitoring_device_producer.py"]
+    tty: true
+
+  energy_monitoring_device_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: energy_monitoring_device_consumer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Energy_Monitoring_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python energy_monitoring_device_consumer.py"]
+    tty: true
+
+  indoor_climate_monitoring_device_producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: indoor_climate_monitoring_device_producer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Indoor_Climate_Monitoring_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python indoor_climate_monitoring_device_producer.py"]
+    tty: true
+
+  indoor_climate_monitoring_device_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: indoor_climate_monitoring_device_consumer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Indoor_Climate_Monitoring_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python indoor_climate_monitoring_device_consumer.py"]
+    tty: true
+
+  security_device_producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: security_device_producer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Security_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python security_device_producer.py"]
+    tty: true
+
+  security_device_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: security_device_consumer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Security_Device:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python security_device_consumer.py"]
+    tty: true
+
+  surveillance_camera_producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: surveillance_camera_producer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Surveillance_Camera:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python surveillance_camera_producer.py"]
+    tty: true
+
+  surveillance_camera_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: surveillance_camera_consumer
+    depends_on:
+      - init-setup
+    volumes:
+      - ./Demo_CE/Topics/Surveillance_Camera:/app
+      - ./shared:/shared
+    working_dir: /app
+    command: ["/bin/sh", "-c", "while [ ! -f /shared/sprintz_encoder.cpython-312-x86_64-linux-gnu.so ]; do sleep 1; done && python surveillance_camera_consumer.py"]
+    tty: true
+
+volumes:
+  shared:

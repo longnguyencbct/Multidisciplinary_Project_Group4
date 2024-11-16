@@ -1,4 +1,2 @@
 pulsar-client
-numpy
-pandas
 pybind11

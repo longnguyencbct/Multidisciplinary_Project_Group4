@@ -1,4 +1,0 @@
-#!/bin/bash
-cd ../../Demo_CE/Topics/Air_Quality_Monitor
-# Open a new terminal for the consumer
-xterm -hold -e "bash -c 'python3 air_quality_monitor_consumer.py; exec bash'" &
