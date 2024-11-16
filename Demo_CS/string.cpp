@@ -89,6 +89,70 @@ string encode_string(const string& line) {
     return concatenated_binary;
 }
 
+vector<double> prev_decode;
+
+void init_prev_decode(int count) {
+    prev_decode.clear();
+    for (int i = 0; i < count; i++) {
+        prev_decode.push_back(0.0);
+    }
+}
+
+string decode_string(const string& line) {
+    string result = "";
+    vector<string> substrings;
+    int len = line.size();
+    for (int i = 0; i < len; i += 32) {
+        substrings.push_back(line.substr(i, 32));
+    }
+    if (prev_decode.empty()) {
+        init_prev_decode(substrings.size());
+    }
+    
+    for (int i = 0; i < substrings.size(); i++) {
+        bool negative = false;
+        bitset<32> errorBit = bitset<32>(substrings[i]);
+
+        if (errorBit[0] == 1)
+            negative = true;
+
+        errorBit = errorBit >> 1;
+        double error = errorBit.to_ulong();
+
+        if (negative)
+            error = -error;
+        double original_value = prev_decode[i] + error;
+        prev_decode[i] = original_value;
+        
+        if (i == 0) {
+            ostringstream oss;
+            oss << fixed << setprecision(0) << original_value;
+            string original_timestamp = oss.str();
+            original_timestamp = "202" + original_timestamp;
+
+            string year = original_timestamp.substr(0, 4);
+            string month = original_timestamp.substr(4, 2);
+            string day = original_timestamp.substr(6, 2);
+            string hour = original_timestamp.substr(8, 2);
+            string minute = original_timestamp.substr(10, 2);
+            original_timestamp = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00";
+
+
+            result = result + original_timestamp + ",";
+        }
+        else {
+            double outputValue = original_value / 1000;
+            ostringstream oss;
+            oss << fixed << setprecision(3) << outputValue;
+            string original_string = oss.str();
+            result = result + original_string;
+            if (i != substrings.size() - 1)
+                result += ",";
+        }
+    }
+    return result;
+}
+
 // Binding code
 PYBIND11_MODULE(sprintz_encoder, m) {
     m.def("encode_string", &encode_string, "Encode a single line using Sprintz encoding, returning one concatenated binary string");
