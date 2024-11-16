@@ -28,10 +28,14 @@ while True:
         # Convert the binary data to a binary string
         encoded_data = bin(int.from_bytes(binary_encoded_data, byteorder='big'))[2:]
         
+        # Debug prints to verify conversion
+        print("Received binary encoded data:\n", binary_encoded_data)
+        print("Converted to binary string:\n", encoded_data)
+        
         # Decode the binary string using the Sprintz decoder
         decoded_data = sprintz_encoder.decode_string(encoded_data)
         
-        print("Received encoded data (binary):\n", binary_encoded_data)
+        print("Number of bits in received encoded data:\n", len(encoded_data))
         print("Decoded data:\n", decoded_data)
         print()
         

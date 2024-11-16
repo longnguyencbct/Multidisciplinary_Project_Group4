@@ -33,10 +33,14 @@ with open('air_quality_monitors.csv', 'r') as csvfile:
         # Convert the concatenated binary string to bytes
         binary_encoded_data = int(encoded_data, 2).to_bytes((len(encoded_data) + 7) // 8, byteorder='big')
         
+        # Debug prints to verify conversion
+        print("Raw row values:\n", row_values)
+        print("Encoded data (binary string):\n", encoded_data)
+        print("Converted to binary encoded data:\n", binary_encoded_data)
+        
         producer.send(binary_encoded_data)  # Send the encoded binary data
         
-        print("Raw row values:\n", row_values)
-        print("Encoded row values (binary):\n", binary_encoded_data)
+        print("Number of bits in encoded data:\n", len(encoded_data))
         print()
         
         time.sleep(1)
