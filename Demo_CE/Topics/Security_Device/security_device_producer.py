@@ -4,10 +4,9 @@ from pathlib import Path
 import pulsar
 import csv
 import time
-import struct
 
 # Define the relative path to the .so file based on the script's location
-sprintz_path = Path(__file__).resolve().parents[1] / "shared" / "sprintz_encoder.cpython-312-x86_64-linux-gnu.so"
+sprintz_path = Path(__file__).resolve().parents[1] / "shared" / "sprintz_encoder.cpython-310-x86_64-linux-gnu.so"
 
 # Load the .so file dynamically
 spec = importlib.util.spec_from_file_location("sprintz_encoder", sprintz_path)
@@ -31,15 +30,22 @@ with open('security_devices.csv', 'r') as csvfile:
         # Encode the row using the Sprintz encoder to get a single binary string
         encoded_data = sprintz_encoder.encode_string(row_values)
 
+        # Ensure the binary string is padded to a multiple of 8 bits
+        encoded_data = encoded_data.zfill((len(encoded_data) + 7) // 8 * 8)
+
         # Convert the concatenated binary string to bytes
         binary_encoded_data = int(encoded_data, 2).to_bytes((len(encoded_data) + 7) // 8, byteorder='big')
         
+        # Debug prints to verify conversion
+        print("Raw row values:\n", row_values)
+        print("Encoded data (binary string):\n", encoded_data)
+        print("Converted to binary encoded data:\n", binary_encoded_data)
+        
         producer.send(binary_encoded_data)  # Send the encoded binary data
         
-        print("Encoded row values (binary):", binary_encoded_data)
-        print("Encoded row type:", type(binary_encoded_data))
-        print("Length of encoded data in bytes:", len(binary_encoded_data))
+        print("Number of bits in encoded data:\n", len(encoded_data))
         print()
         
-        time.sleep(1) 
+        time.sleep(1)
+
 client.close()

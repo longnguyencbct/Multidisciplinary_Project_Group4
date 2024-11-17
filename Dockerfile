@@ -1,23 +1,20 @@
-# Use the official Python image as a base
-FROM python:3.8-slim-buster
+# Use the official Python image from the Docker Hub
+FROM python:3.10-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Install necessary dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libstdc++6 \
-    && rm -rf /var/lib/apt/lists/*
+# Clean up the cache and update the package list
+RUN apt-get clean && apt-get update --allow-releaseinfo-change --allow-insecure-repositories && \
+    apt-get install -y build-essential libstdc++6 software-properties-common && \
+    apt-get install -y gcc g++ procps && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container
-COPY Demo_CE/requirements.txt .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r /app/Demo_CE/requirements.txt
 
-# Copy the setup.py and string.cpp files into the container
-COPY Demo_CS/setup.py Demo_CS/string.cpp /app/
-
-# Set the entrypoint to run the Python script
-ENTRYPOINT ["python"]
+# Command to keep the container running
+CMD ["tail", "-f", "/dev/null"]
