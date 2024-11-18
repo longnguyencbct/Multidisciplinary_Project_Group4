@@ -16,5 +16,8 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r /app/Demo_CE/requirements.txt
 
+# Run the setup.py script
+RUN cd /app/Demo_CS && python setup.py build_ext --inplace
+
 # Command to keep the container running
 CMD ["tail", "-f", "/dev/null"]
