@@ -116,11 +116,12 @@ string decode_string(const string& line) {
         if (errorBit[0] == 1)
             negative = true;
 
-        errorBit = errorBit >> 1;
         double error = errorBit.to_ulong();
 
         if (negative)
-            error = -error;
+            error = -(error + 1) / 2;
+        else
+            error /= 2;
         double original_value = prev_decode[i] + error;
         prev_decode[i] = original_value;
         
