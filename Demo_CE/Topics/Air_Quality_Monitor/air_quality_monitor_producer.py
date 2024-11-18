@@ -6,7 +6,7 @@ import csv
 import time
 
 # Define the relative path to the .so file based on the script's location
-sprintz_path = Path(__file__).resolve().parents[1] / "shared" / "sprintz_encoder.cpython-312-x86_64-linux-gnu.so"
+sprintz_path = Path(__file__).resolve().parents[1] / "shared" / "sprintz_encoder.cpython-310-x86_64-linux-gnu.so"
 
 # Load the .so file dynamically
 spec = importlib.util.spec_from_file_location("sprintz_encoder", sprintz_path)
