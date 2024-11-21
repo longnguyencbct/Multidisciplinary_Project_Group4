@@ -1,29 +1,18 @@
 # Function to handle termination
 function Terminate {
-    Write-Host "Terminating processes..."
-    docker exec -it init-setup sh -c "pkill -f python"
-    Write-Host "Processes terminated."
+    Write-Output "Terminating processes..."
+    docker exec -it init-setup /bin/bash -c "pkill -f air_quality_monitor_producer.py"
+    exit
 }
 
-# Trap terminal close signal
-trap {
-    Terminate
-    continue
-} -SignalName SIGINT, SIGTERM
+# Trap termination signals
+Register-EngineEvent PowerShell.Exiting -Action { Terminate }
 
-# Terminate any existing processes inside the container
-Write-Host "Terminating any existing processes inside the container..."
-docker exec -it init-setup sh -c "pkill -f python"
-Write-Host "Existing processes terminated."
+# Terminate any existing producer processes inside the container
+docker exec -it init-setup /bin/bash -c "pkill -f air_quality_monitor_producer.py"
 
-# Open a new Command Prompt window for the producer
-Write-Host "Opening a new Command Prompt window for the producer..."
-Start-Process -FilePath "cmd.exe" -ArgumentList "/K docker exec -it init-setup sh -c ""cd Demo_CE/Topics/Air_Quality_Monitor && python air_quality_monitor_producer.py"""
-Write-Host "Producer window opened."
+# Start producer in a new terminal
+Start-Process powershell -ArgumentList '-NoExit', '-Command', "docker exec -it init-setup /bin/bash -c 'cd /app/Demo_CE/Topics/Air_Quality_Monitor && python3 air_quality_monitor_producer.py'"
 
-# Adding delay for new process to start
-Start-Sleep -Seconds 1
-
-# Wait for all background processes to finish
-Write-Host "Waiting for all background processes to finish..."
-Wait-Process
+# Wait indefinitely
+Start-Sleep -Seconds ([int]::MaxValue)

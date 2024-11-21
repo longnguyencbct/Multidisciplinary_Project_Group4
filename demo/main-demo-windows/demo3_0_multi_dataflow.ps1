@@ -1,6 +1,3 @@
-# Define the base directory for topics
-$BASE_DIR = "Demo_CE/Topics"
-
 # Declare an array of topics and script names
 $topics = @{
     "Air_Quality_Monitor" = "air_quality_monitor"
@@ -13,45 +10,38 @@ $topics = @{
 
 # Function to handle termination
 function Terminate {
-    Write-Host "Terminating processes..."
-    docker exec -it init-setup sh -c "pkill -f python"
-    Write-Host "Processes terminated."
+    Write-Output "Terminating processes..."
+    foreach ($topic in $topics.Keys) {
+        $script_prefix = $topics[$topic]
+        docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_producer.py"
+        docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_consumer.py"
+    }
+    exit
 }
 
-# Trap terminal close signal
-trap {
-    Terminate
-    continue
-} -SignalName SIGINT, SIGTERM
+# Trap termination signals
+Register-EngineEvent PowerShell.Exiting -Action { Terminate }
 
 # Terminate any existing processes inside the container
-Write-Host "Terminating any existing processes inside the container..."
-docker exec -it init-setup sh -c "pkill -f python"
-Write-Host "Existing processes terminated."
-
-# Loop over topics to run each producer and consumer in separate Command Prompt windows
 foreach ($topic in $topics.Keys) {
     $script_prefix = $topics[$topic]
-    # Properly construct the topic directory path
-    $topic_dir = "$BASE_DIR/$topic"
+    docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_producer.py"
+    docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_consumer.py"
+}
 
-    # Open a new Command Prompt window for the producer
-    Write-Host "Opening a new Command Prompt window for the producer for topic: $topic..."
-    Start-Process -FilePath "cmd.exe" -ArgumentList "/K docker exec -it init-setup sh -c `"cd '$topic_dir' && python ${script_prefix}_producer.py`""
-    Write-Host "Producer window for topic: $topic opened."
+# Loop over topics to run each producer and consumer in separate terminals
+foreach ($topic in $topics.Keys) {
+    $script_prefix = $topics[$topic]
 
-    # Adding delay for new process to start
-    Start-Sleep -Seconds 1
+    # Start producer in a new terminal
+    Start-Process powershell -ArgumentList '-NoExit', '-Command', "docker exec -it init-setup /bin/bash -c 'cd /app/Demo_CE/Topics/$topic && python3 ${script_prefix}_producer.py'"
 
-    # Open a new Command Prompt window for the consumer
-    Write-Host "Opening a new Command Prompt window for the consumer for topic: $topic..."
-    Start-Process -FilePath "cmd.exe" -ArgumentList "/K docker exec -it init-setup sh -c `"cd '$topic_dir' && python ${script_prefix}_consumer.py`""
-    Write-Host "Consumer window for topic: $topic opened."
+    # Start consumer in a new terminal
+    Start-Process powershell -ArgumentList '-NoExit', '-Command', "docker exec -it init-setup /bin/bash -c 'cd /app/Demo_CE/Topics/$topic && python3 ${script_prefix}_consumer.py'"
 
-    # Adding delay for new process to start
+    # Optional: Sleep between launches
     Start-Sleep -Seconds 1
 }
 
-# Wait for all background processes to finish
-Write-Host "Waiting for all background processes to finish..."
-Wait-Process
+# Wait indefinitely
+Start-Sleep -Seconds ([int]::MaxValue)
