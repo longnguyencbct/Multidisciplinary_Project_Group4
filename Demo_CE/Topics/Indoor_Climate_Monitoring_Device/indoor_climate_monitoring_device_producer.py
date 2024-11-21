@@ -35,7 +35,7 @@ with open('indoor_climate_monitoring_devices.csv', 'r') as csvfile:
 
         # Convert the concatenated binary string to bytes
         binary_encoded_data = int(encoded_data, 2).to_bytes((len(encoded_data) + 7) // 8, byteorder='big')
-        
+        print("---Indoor_Climate_Monitoring_Device Producer sending message---")
         # Debug prints to verify conversion
         print("Raw row values:\n", row_values)
         print("Encoded data (binary string):\n", encoded_data)

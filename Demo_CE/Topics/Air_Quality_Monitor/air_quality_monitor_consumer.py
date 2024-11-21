@@ -22,6 +22,7 @@ consumer = client.subscribe('persistent://Smart_Home/Environmental_Monitoring/Ai
 while True:
     msg = consumer.receive()
     try:
+        print("---Air_Quality_Monitor Consumer received message---")
         # Get the binary data from the message
         binary_encoded_data = msg.data()
         

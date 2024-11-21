@@ -22,6 +22,7 @@ consumer = client.subscribe('persistent://Smart_Home/Security_Surveillance/Secur
 while True:
     msg = consumer.receive()
     try:
+        print("---Security_Device Consumer received message---")
         # Get the binary data from the message
         binary_encoded_data = msg.data()
         
