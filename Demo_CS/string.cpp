@@ -93,6 +93,24 @@ vector<double> prev_decode;
 
 void init_prev_decode(int count) {
     prev_decode.clear();
+    string name = "prev_decode.txt";
+    ifstream inputFile(name);
+    bool prev_data = true;
+
+    if (!inputFile || inputFile.peek() == ifstream::traits_type::eof())
+        prev_data = false;
+
+    if (prev_data) {
+        string line;
+        getline(inputFile, line);
+        istringstream ss(line);
+        string data;
+        while (getline(ss, data, ',')) {
+            double value = std::stod(data);
+            prev_decode.push_back(value);
+        }
+        return;
+    }
     for (int i = 0; i < count; i++) {
         prev_decode.push_back(0.0);
     }
@@ -100,6 +118,7 @@ void init_prev_decode(int count) {
 
 string decode_string(const string& line) {
     string result = "";
+    string output = "";
     vector<string> substrings;
     int len = line.size();
     for (int i = 0; i < len; i += 32) {
@@ -108,7 +127,8 @@ string decode_string(const string& line) {
     if (prev_decode.empty()) {
         init_prev_decode(substrings.size());
     }
-    
+    string name = "prev_decode.txt";
+    ofstream outFileDec(name);
     for (int i = 0; i < substrings.size(); i++) {
         bool negative = false;
         bitset<32> errorBit = bitset<32>(substrings[i]);
@@ -129,6 +149,7 @@ string decode_string(const string& line) {
             ostringstream oss;
             oss << fixed << setprecision(0) << original_value;
             string original_timestamp = oss.str();
+            output += original_timestamp;
             original_timestamp = "202" + original_timestamp;
 
             string year = original_timestamp.substr(0, 4);
@@ -142,15 +163,19 @@ string decode_string(const string& line) {
             result = result + original_timestamp + ",";
         }
         else {
+            ostringstream osss;
+            osss << fixed << setprecision(0) << original_value;
+            string outString = osss.str();
+            output = output + "," + outString;
             double outputValue = original_value / 1000;
             ostringstream oss;
             oss << fixed << setprecision(3) << outputValue;
             string original_string = oss.str();
-            result = result + original_string;
-            if (i != substrings.size() - 1)
-                result += ",";
+            result = result + "," + original_string;
         }
     }
+    outFileDec << output;
+    outFileDec.close();
     return result;
 }
 
