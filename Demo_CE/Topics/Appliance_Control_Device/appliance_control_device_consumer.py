@@ -22,6 +22,7 @@ consumer = client.subscribe('persistent://Smart_Home/Energy_Management/Appliance
 while True:
     msg = consumer.receive()
     try:
+        print("---Appliance_Control_Device Consumer received message---")
         # Get the binary data from the message
         binary_encoded_data = msg.data()
         
