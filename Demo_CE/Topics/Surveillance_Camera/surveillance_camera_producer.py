@@ -14,6 +14,13 @@ sprintz_encoder = importlib.util.module_from_spec(spec)
 sys.modules["sprintz_encoder"] = sprintz_encoder
 spec.loader.exec_module(sprintz_encoder)
 
+# Clear the contents of the prev_row.txt file
+prev_row_file = Path("prev_row.txt")
+if prev_row_file.exists():
+    with open(prev_row_file, 'w') as file:
+        file.write("")
+    print("Cleared prev_row.txt file")
+
 # Pulsar setup
 with open('../pulsar_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()
@@ -49,5 +56,3 @@ with open('surveillance_cameras.csv', 'r') as csvfile:
         time.sleep(1)
 
 client.close()
-
-#'persistent://Smart_Home/Security_Surveillance/Surveillance_Camera'

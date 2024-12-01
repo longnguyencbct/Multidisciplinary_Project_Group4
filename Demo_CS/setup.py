@@ -4,6 +4,7 @@ from distutils.sysconfig import get_python_inc
 import shutil
 from pathlib import Path
 import os
+import time
 
 # Get the include path from pybind11
 include_dirs = [
@@ -21,7 +22,6 @@ ext_modules = [
         extra_compile_args=['-std=c++11', '-static-libstdc++'],
     ),
 ]
-
 
 # Function to remove previous .so files
 def remove_previous_so_files():
@@ -59,6 +59,9 @@ def copy_so_file():
 
 # Remove previous .so files before building
 remove_previous_so_files()
+
+# Wait for 5 seconds before proceeding
+# time.sleep(5)
 
 setup(
     name='sprintz_encoder',
