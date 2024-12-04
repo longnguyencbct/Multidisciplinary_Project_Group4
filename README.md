@@ -6,26 +6,24 @@ This project utilizes Apache Pulsar for real-time data streaming and SprintZ com
 
 - Docker and Docker Compose
 
-## **Installation**
+## **[Optional] Setting up Pulsar Server (Debian-based OS server only)**
+**Guide**: Navigate to [Demo_CE/README.md](Demo_CE/README.md)
 
-1. **Clone the repository**:
-    ```sh
-    git clone https://github.com/longnguyencbct/Multidisciplinary_Project_Group4.git
-    ```
+This step is optional, because we have a dedicated server that is hosting Smart Home's Apache Pulsar Cluster. 
 
-2. **Run docker-compose.yml**:
-    ```
-    docker compose up --build -d
-    ```
-    or
-    ```
-    docker-compose up --build -d
-    ```
-## **Demonstration**: 
+## **[Optional] Setting up Producers, Consumers**
+**Guide**: Navigate to [Demo_CE/Topics/README.md](Demo_CE/Topics/README.md)
+
+This step is optional, because we have implemented 6 topics for demonstration, with each of them having 1 producer and 1 consumer. 
+
+## **Setting up Demonstration**
 ### **Debian-based**: 
-Navigate to `/demo/main-demo/README.md`
+
+**Guide**: Navigate to [demo/main-demo/README.md](demo/main-demo/README.md)
+
 ### **Windows**: 
-Navigate to `/demo/main-demo-windows/README.md`
+
+**Guide**: Navigate to [demo/main-demo-windows/README.md](demo/main-demo-windows/README.md)
 
 ## Acknowledgements
 

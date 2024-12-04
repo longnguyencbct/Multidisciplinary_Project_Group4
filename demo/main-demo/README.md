@@ -15,19 +15,13 @@ This guide will help you demonstrate the Smart Home IoT Environmental and Securi
     cd Multidisciplinary_Project_Group4
     ```
 
-2. **Run the setup script**:
-    ```bash
-    ./setup.sh
-    ```
-    This script will remove any previous `.so` files and run the `setup.py` script to build the necessary extensions.
-
-3. **Start the Docker containers**:
+2. **Start the Docker containers**:
     ```bash
     docker-compose up --build -d
     ```
     This command will build and start the Docker containers defined in the `docker-compose.yml` file.
 
-4. **Run the demonstration scripts**:
+3. **Run the demonstration scripts**:
 
     - **demo1_0_init_dataflow**:
         ```bash
@@ -98,8 +92,6 @@ This guide will help you demonstrate the Smart Home IoT Environmental and Securi
         This script terminates both producer and consumer processes across all topics, ensuring all processes are stopped cleanly.
 
 ## **What Happens in the Process**
-
-- **Setup Script**: The `setup.sh` script ensures that any previous compiled extensions are removed and rebuilds the necessary extensions using `setup.py`.
 - **Docker Containers**: The `docker-compose up` command builds and starts the Docker containers, setting up the environment for the demonstration.
 - **Demonstration Scripts**: Each demonstration script runs the producer and/or consumer scripts for the specified topics in separate GNOME terminals, simulating real-time data flow and processing.
 - **Termination Scripts**: Scripts like `kill_all_producer`, `kill_all_consumer`, and `kill_all_producer_consumer` provide functionality to cleanly terminate all running processes.
