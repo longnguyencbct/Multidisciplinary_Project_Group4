@@ -17,8 +17,7 @@ with open('../pulsar_address.txt', 'r') as file:
     pulsar_address = file.readline().strip()
 
 client = pulsar.Client(pulsar_address)
-consumer = client.subscribe('persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor', subscription_name='subscription')
-
+consumer = client.subscribe('persistent://Smart_Home/Environmental_Monitoring/Air_Quality_Monitor', subscription_name='subscription', consumer_type=pulsar.ConsumerType.Failover)
 prev_row = ""
 
 # Load previous row from file if it exists
