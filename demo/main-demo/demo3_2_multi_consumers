@@ -1,39 +1,42 @@
 #!/bin/bash
-# Declare an array of topics and script names
-declare -A topics=(
-    ["Air_Quality_Monitor"]="air_quality_monitor"
-    ["Appliance_Control_Device"]="appliance_control_device"
-    ["Energy_Monitoring_Device"]="energy_monitoring_device"
-    ["Indoor_Climate_Monitoring_Device"]="indoor_climate_monitoring_device"
-    ["Security_Device"]="security_device"
-    ["Surveillance_Camera"]="surveillance_camera"
-)
-# Function to handle termination
-terminate() {
-    echo "Terminating processes..."
-    for topic in "${!topics[@]}"; do
-        script_prefix="${topics[$topic]}"
-        docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_consumer.py"
-    done
-    kill 0
-}
-# Trap terminal close signal
-trap terminate SIGINT SIGTERM
-# Terminate any existing consumer processes inside the container
-for topic in "${!topics[@]}"; do
-    script_prefix="${topics[$topic]}"
-    docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_consumer.py"
-done
-# Loop over topics to run each consumer in separate terminals
-for topic in "${!topics[@]}"; do
-    # Get the script prefix from the topic array
-    script_prefix="${topics[$topic]}"
+# # Declare an array of topics and script names
+# declare -A topics=(
+#     ["Air_Quality_Monitor"]="air_quality_monitor"
+#     ["Appliance_Control_Device"]="appliance_control_device"
+#     ["Energy_Monitoring_Device"]="energy_monitoring_device"
+#     ["Indoor_Climate_Monitoring_Device"]="indoor_climate_monitoring_device"
+#     ["Security_Device"]="security_device"
+#     ["Surveillance_Camera"]="surveillance_camera"
+# )
+# # Function to handle termination
+# terminate() {
+#     echo "Terminating processes..."
+#     for topic in "${!topics[@]}"; do
+#         script_prefix="${topics[$topic]}"
+#         docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_consumer.py"
+#     done
+#     kill 0
+# }
+# # Trap terminal close signal
+# trap terminate SIGINT SIGTERM
+# # Terminate any existing consumer processes inside the container
+# for topic in "${!topics[@]}"; do
+#     script_prefix="${topics[$topic]}"
+#     docker exec -it init-setup /bin/bash -c "pkill -f ${script_prefix}_consumer.py"
+# done
+# # Loop over topics to run each consumer in separate terminals
+# for topic in "${!topics[@]}"; do
+#     # Get the script prefix from the topic array
+#     script_prefix="${topics[$topic]}"
     
-    # Open a new terminal for the consumer
-    gnome-terminal -- bash -c 'docker exec -it init-setup /bin/bash -c "cd Demo_CE/Topics/'${topic}' && python '${script_prefix}_consumer.py'"; exec bash' &
+#     # Open a new terminal for the consumer
+#     gnome-terminal -- bash -c 'docker exec -it init-setup /bin/bash -c "cd Demo_CE/Topics/'${topic}' && python '${script_prefix}_consumer.py'"; exec bash' &
     
-    # Optional: Add a sleep interval between each consumer launch
-    sleep 1
-done
-# Wait for all background processes to finish
-wait
+#     # Optional: Add a sleep interval between each consumer launch
+#     sleep 1
+# done
+# # Wait for all background processes to finish
+# wait
+
+./clear_prev_data.sh
+./demo2_2_multi_consumers_rerun
