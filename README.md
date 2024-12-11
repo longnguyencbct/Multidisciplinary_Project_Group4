@@ -11,6 +11,15 @@ This project utilizes Apache Pulsar for real-time data streaming and SprintZ com
 
 This step is optional, because we have a dedicated server that is hosting Smart Home's Apache Pulsar Cluster. 
 
+## **[Optional] Prepare SprintZ Compression**
+
+```sh
+cd Demo_CS
+python setup.py build_ext --inplace
+```
+
+This step is optional, because we have already compiled the string.cpp file into a .so file and it will be used inside the container when you compose it up.
+
 ## **[Optional] Setting up Producers, Consumers**
 **Guide**: Navigate to [Demo_CE/Topics/README.md](Demo_CE/Topics/README.md)
 
