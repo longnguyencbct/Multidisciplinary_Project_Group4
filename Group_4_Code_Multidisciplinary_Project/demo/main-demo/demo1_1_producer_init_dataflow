@@ -1,0 +1,19 @@
+#!/bin/bash
+# Function to handle termination
+terminate() {
+    echo "Terminating processes..."
+    docker exec -it init-setup /bin/bash -c "pkill -f air_quality_monitor_producer.py"
+    kill 0
+}
+
+# Trap terminal close signal
+trap terminate SIGINT SIGTERM
+
+# Terminate any existing producer processes inside the container
+docker exec -it init-setup /bin/bash -c "pkill -f air_quality_monitor_producer.py"
+
+# Open a new terminal for the producer
+gnome-terminal -- bash -c 'docker exec -it init-setup /bin/bash -c "cd Demo_CE/Topics/Air_Quality_Monitor && python air_quality_monitor_producer.py"; exec bash' &
+
+# Wait for all background processes to finish
+wait

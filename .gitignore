@@ -1,10 +1,10 @@
 
-venv/
+Group_4_Code_Multidisciplinary_Project/venv/
 
-Demo/server_address.txt
+Group_4_Code_Multidisciplinary_Project/Demo/server_address.txt
 
 .vscode/
 
-Demo_CE/server_address.txt
+Group_4_Code_Multidisciplinary_Project/Demo_CE/server_address.txt
 
-Demo_CE/data/
+Group_4_Code_Multidisciplinary_Project/Demo_CE/data/

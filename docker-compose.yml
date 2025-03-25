@@ -1,9 +1,0 @@
-services:
-  init-setup:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: init-setup
-    volumes:
-      - .:/app
-    command: ["tail", "-f", "/dev/null"]
